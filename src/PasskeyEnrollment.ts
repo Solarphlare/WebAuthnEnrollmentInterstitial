@@ -4,7 +4,7 @@ export default async function enrollPasskey() {
 
     let passkeyCreateOptions: Response;
     try {
-        passkeyCreateOptions = await fetch("https://auth.cominatyou.com/auth/public-key/create-registration-options", {
+        passkeyCreateOptions = await fetch("https://auth.solarphlare.com/auth/public-key/create-registration-options", {
             method: "POST",
             credentials: "same-origin"
         });
@@ -22,7 +22,7 @@ export default async function enrollPasskey() {
 
     let creationResponse: Response;
     try {
-        creationResponse = await fetch("https://auth.cominatyou.com/auth/public-key/register", {
+        creationResponse = await fetch("https://auth.solarphlare.com/auth/public-key/register", {
             method: "POST",
             credentials: 'same-origin',
             headers: {
@@ -42,14 +42,14 @@ export default async function enrollPasskey() {
     const creationResponseBody: { id: string, name: string, created_at: string; } = await creationResponse.json();
 
     try {
-        const sessions = await fetch("https://api.cominatyou.com/users/me/sessions", {
+        const sessions = await fetch("https://api.solarphlare.com/users/me/sessions", {
             credentials: "same-origin"
         });
 
         if (!sessions.ok) return;
         const sessionsData = await sessions.json();
 
-        await fetch(`https://auth.cominatyou.com/users/me/public-keys/${creationResponseBody.id}`, {
+        await fetch(`https://auth.solarphlare.com/users/me/public-keys/${creationResponseBody.id}`, {
             method: "PATCH",
             credentials: "same-origin",
             body: JSON.stringify({

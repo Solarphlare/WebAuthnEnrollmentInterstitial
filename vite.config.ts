@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [react()],
   base: "/interstitials/",
   server: {
-    host: "loopback.cominatyou.com",
+    host: "loopback.solarphlare.com",
     https: {
       key: fs.readFileSync('C:\\Users\\willi\\Documents\\dev\\loopback-certs\\loopback-key.pem'),
       cert: fs.readFileSync('C:\\Users\\willi\\Documents\\dev\\loopback-certs\\fullchain.pem')

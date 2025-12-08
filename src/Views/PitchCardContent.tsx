@@ -75,7 +75,7 @@ export function PitchCardContent({ complete, onComplete }: { complete: boolean, 
                 <div id="complete-elements" className="hidden flex-col gap-2 transition-all duration-300 opacity-0">
                     <h1 className='font-semibold text-2xl transition-all duration-300 selection:bg-neutral-900 selection:text-white dark:text-neutral-200 dark:selection:bg-neutral-200 dark:selection:text-black'>Passkey Created</h1>
                     <p className='transition-all duration-300 selection:bg-neutral-900 selection:text-white dark:text-neutral-200 dark:selection:bg-neutral-200 dark:selection:text-black'>Your passkey has been successfully created. Now, you can sign in with just your face, fingerprint, or PIN &ndash; without having to remember another password.</p>
-                    <p className='transition-all mt-2 duration-300 selection:bg-neutral-900 selection:text-white dark:text-neutral-200 dark:selection:bg-neutral-200 dark:selection:text-black'>Passkeys can be added or removed at <a className="md:hover:underline" href="https://auth.cominatyou.com" target="_blank">auth.cominatyou.com</a>, and they can also be removed from your device in its Settings app.</p>
+                    <p className='transition-all mt-2 duration-300 selection:bg-neutral-900 selection:text-white dark:text-neutral-200 dark:selection:bg-neutral-200 dark:selection:text-black'>Passkeys can be added or removed at <a className="md:hover:underline" href="https://auth.solarphlare.com" target="_blank">auth.solarphlare.com</a>, and they can also be removed from your device in its Settings app.</p>
                 </div>
             </div>
             <div className='flex flex-col gap-3 items-center transition-all duration-300'>
