@@ -9,5 +9,5 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <SnackbarProvider>
       <App />
     </SnackbarProvider>
-  </React.StrictMode>,
+  </React.StrictMode>
 )

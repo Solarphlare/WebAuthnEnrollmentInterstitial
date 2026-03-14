@@ -1,12 +1,22 @@
 import { startRegistration } from "@simplewebauthn/browser";
+import { RegistrationResponseJSON } from "@simplewebauthn/types";
+import SetupState from "./SetupState";
+import turnstileRender from "./turnstile";
 
-export default async function enrollPasskey() {
+export default async function enrollPasskey(setSetupState: (state: SetupState) => void) {
+    const turnstileToken = await turnstileRender("#root", {
+        sitekey: "0x4AAAAAABoB88S_MNbuZG5w"
+    });
 
     let passkeyCreateOptions: Response;
     try {
         passkeyCreateOptions = await fetch("https://auth.solarphlare.com/auth/public-key/create-registration-options", {
             method: "POST",
-            credentials: "same-origin"
+            credentials: "same-origin",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ turnstileToken })
         });
     }
     catch {
@@ -18,7 +28,14 @@ export default async function enrollPasskey() {
     }
 
     const attestationOptions = await passkeyCreateOptions.json();
-    const attestationResponse = await startRegistration(attestationOptions);
+    let attestationResponse: RegistrationResponseJSON;
+    try {
+        attestationResponse = await startRegistration(attestationOptions);
+    }
+    catch {
+        setSetupState(SetupState.NotStarted);
+        return
+    }
 
     let creationResponse: Response;
     try {
@@ -43,7 +60,7 @@ export default async function enrollPasskey() {
 
     try {
         const sessions = await fetch("https://api.solarphlare.com/users/me/sessions", {
-            credentials: "same-origin"
+            credentials: "include"
         });
 
         if (!sessions.ok) return;
@@ -56,6 +73,8 @@ export default async function enrollPasskey() {
                 name: `${sessionsData.currentSession.device} ${creationResponseBody.name}`
             })
         });
+
+        setSetupState(SetupState.Complete);
     }
     catch {
         return;

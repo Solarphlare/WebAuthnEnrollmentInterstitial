@@ -4,17 +4,19 @@ import { LargeButton } from '../Components/LargeButton';
 import enrollPasskey from '../PasskeyEnrollment';
 import anime from 'animejs';
 import { useSnackbar } from '../ComponentContexts/SnackbarContext';
+import SetupState from '../SetupState';
 
-export function PitchCardContent({ complete, onComplete }: { complete: boolean, onComplete: () => void }) {
+export function PitchCardContent({ setupState, setSetupState }: { setupState: SetupState, setSetupState: (state: SetupState) => void }) {
     const { showSnackbar } = useSnackbar();
 
     async function onCreateClick() {
-        if (!complete) {
+        if (setupState !== SetupState.Complete) {
             try {
-                await enrollPasskey();
-                onComplete();
+                setSetupState(SetupState.InProgress);
+                await enrollPasskey(setSetupState);
             }
             catch (e) {
+                setSetupState(SetupState.NotStarted);
                 console.error(e);
                 showSnackbar({ text: "Failed to create the passkey." });
             }
@@ -24,18 +26,17 @@ export function PitchCardContent({ complete, onComplete }: { complete: boolean, 
         }
     }
 
-
     useEffect(() => {
-        if (!complete) return;
+        if (setupState !== SetupState.Complete) return;
 
         (async () => {
             anime({
-                targets: "#create-label",
+                targets: "#loading-dots",
                 opacity: 0,
                 duration: 150,
                 easing: "easeInOutSine",
                 complete: async () => {
-                    document.getElementById("create-label")!.classList.add("hidden");
+                    document.getElementById("loading-dots")!.classList.add("hidden");
                     document.getElementById("continue-label")!.classList.remove("hidden");
 
                     anime({
@@ -62,7 +63,7 @@ export function PitchCardContent({ complete, onComplete }: { complete: boolean, 
             pitchElem.classList.add("opacity-0");
 
         })();
-    }, [complete]);
+    }, [setupState]);
 
     return (
         <div className='flex flex-col gap-6 transition-all justify-between duration-250 flex-1'>
@@ -79,13 +80,35 @@ export function PitchCardContent({ complete, onComplete }: { complete: boolean, 
                 </div>
             </div>
             <div className='flex flex-col gap-3 items-center transition-all duration-300'>
-                <div id="hero-button-container" className={`w-full ${complete ? "" : "mb-[44px]"} transition-all duration-[350ms]`}>
+                <div id="hero-button-container" className={`w-full ${setupState === SetupState.Complete ? "" : "mb-[44px]"} transition-all duration-[350ms]`}>
                     <LargeButton onClick={onCreateClick}>
-                        <p id="create-label">Create a Passkey</p>
+                        <div className="flex justify-center items-center gap-2" id="hero-button-content">
+                        {
+                            setupState !== SetupState.NotStarted ? (
+                                <>
+                                    <div
+                                        id="loading-dots" className="relative inline-block w-2.5 h-2.5 rounded-full bg-white
+                                            animate-dotFlashing
+                                            [animation-delay:0.2s]
+                                            before:content-[''] before:absolute before:top-0 before:-left-4
+                                            before:w-2.5 before:h-2.5 before:rounded-full before:bg-white
+                                            before:animate-dotFlashing before:[animation-delay:0s]
+                                            after:content-[''] after:absolute after:top-0 after:left-4
+                                            after:w-2.5 after:h-2.5 after:rounded-full after:bg-white
+                                            after:animate-dotFlashing after:[animation-delay:0.4s]">
+                                    </div>
+                                    <span>&nbsp;</span>
+                                </>
+                            ) : (
+                                <p id="create-label">Create a Passkey</p>
+                            )
+
+                        }
                         <p className='hidden opacity-0' id="continue-label">Continue</p>
+                        </div>
                     </LargeButton>
                 </div>
-                <button className={`md:hover:underline mt-[-44px] ${complete ? "opacity-0" : ""} select-none text-center pt-2 transition-all duration-300 dark:text-neutral-200`} onClick={() => { window.location.href = "/continue" }}>Remind Me Later</button>
+                <button className={`md:hover:underline mt-[-44px] ${setupState === SetupState.Complete ? "opacity-0" : ""} select-none text-center pt-2 transition-all duration-300 dark:text-neutral-200`} onClick={() => { window.location.href = "/continue" }}>Remind Me Later</button>
             </div>
         </div>
     );
