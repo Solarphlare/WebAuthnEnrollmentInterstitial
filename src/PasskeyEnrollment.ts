@@ -1,6 +1,6 @@
 import { startRegistration } from "@simplewebauthn/browser";
 import { RegistrationResponseJSON } from "@simplewebauthn/types";
-import SetupState from "./SetupState";
+import SetupState from "./Types/SetupState";
 import turnstileRender from "./turnstile";
 
 export default async function enrollPasskey(setSetupState: (state: SetupState) => void) {

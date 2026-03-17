@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { PitchCardContent } from './Views/PitchCardContent';
 import { Snackbar } from './Components/Snackbar';
-import SetupState from './SetupState';
+import SetupState from './Types/SetupState';
 
 function App() {
   const [setupState, setSetupState] = useState(SetupState.NotStarted);

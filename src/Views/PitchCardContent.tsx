@@ -4,7 +4,7 @@ import { LargeButton } from '../Components/LargeButton';
 import enrollPasskey from '../PasskeyEnrollment';
 import anime from 'animejs';
 import { useSnackbar } from '../ComponentContexts/SnackbarContext';
-import SetupState from '../SetupState';
+import SetupState from '../Types/SetupState';
 
 export function PitchCardContent({ setupState, setSetupState }: { setupState: SetupState, setSetupState: (state: SetupState) => void }) {
     const { showSnackbar } = useSnackbar();
